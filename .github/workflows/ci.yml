@@ -4,7 +4,7 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Trigger the workflow on push or pull request events to the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
@@ -22,19 +22,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks out your repository under $GITHUB_WORKSPACE so your job can access it
+      # Check out your repository under $GITHUB_WORKSPACE so your job can access it
       - uses: actions/checkout@v4
 
-      # Updated Step: Run markdown lint with artifact output
+      # Run markdown lint with artifact output
       - name: Run markdown lint
         run: |
           # Install necessary packages including vfile-reporter-json for JSON reporting
           npm install remark-cli remark-preset-lint-consistent vfile-reporter-json
-          # Run remark to lint Markdown files, using the JSON reporter
-          # Redirect stderr to 'remark-lint-report.json' to capture the linting report
+          # Run remark to lint Markdown files using the JSON reporter,
+          # redirect stderr to 'remark-lint-report.json' to capture the linting report
           npx remark . --use remark-preset-lint-consistent --report vfile-reporter-json 2> remark-lint-report.json
 
-      # New Step: Upload the generated remark-lint report as an artifact
+      # Upload the generated remark-lint report as an artifact
       - uses: actions/upload-artifact@v4
         with:
           name: remark-lint-report  # Name of the artifact
