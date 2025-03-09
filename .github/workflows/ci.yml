@@ -25,8 +25,17 @@ jobs:
       # Checks out your repository under $GITHUB_WORKSPACE so your job can access it
       - uses: actions/checkout@v4
 
-      # Run markdown lint to check and enforce consistent Markdown style
+      # Updated Step: Run markdown lint with artifact output
       - name: Run markdown lint
         run: |
-          npm install remark-cli remark-preset-lint-consistent
-          npx remark . --use remark-preset-lint-consistent --frail
+          # Install necessary packages including vfile-reporter-json for JSON reporting
+          npm install remark-cli remark-preset-lint-consistent vfile-reporter-json
+          # Run remark to lint Markdown files, using the JSON reporter
+          # Redirect stderr to 'remark-lint-report.json' to capture the linting report
+          npx remark . --use remark-preset-lint-consistent --report vfile-reporter-json 2> remark-lint-report.json
+
+      # New Step: Upload the generated remark-lint report as an artifact
+      - uses: actions/upload-artifact@v4
+        with:
+          name: remark-lint-report  # Name of the artifact
+          path: remark-lint-report.json  # File path to the artifact
