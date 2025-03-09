@@ -9,33 +9,29 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Check out your repository under $GITHUB_WORKSPACE so your job can access it
+      # Check out your repository so the job can access it
       - uses: actions/checkout@v4
 
       # Run markdown lint with artifact output
       - name: Run markdown lint
         run: |
-          # Install necessary packages including vfile-reporter-json for JSON reporting
+          # Install required packages including vfile-reporter-json for JSON reporting
           npm install remark-cli remark-preset-lint-consistent vfile-reporter-json
           # Run remark to lint Markdown files using the JSON reporter,
-          # redirect stderr to 'remark-lint-report.json' to capture the linting report
+          # and redirect stderr to 'remark-lint-report.json' to capture the report
           npx remark . --use remark-preset-lint-consistent --report vfile-reporter-json 2> remark-lint-report.json
 
       # Upload the generated remark-lint report as an artifact
       - uses: actions/upload-artifact@v4
         with:
-          name: remark-lint-report  # Name of the artifact
-          path: remark-lint-report.json  # File path to the artifact
+          name: remark-lint-report
+          path: remark-lint-report.json
